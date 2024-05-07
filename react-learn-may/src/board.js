@@ -71,6 +71,15 @@ export function Board({ xIsNext, squares, onPlay }) {
     }
     onPlay(nextSquares);
   }
+  const element = ((rowOffset) => {
+    let content = [];
+    for (let i = 0; i < 3; i++) {
+      content.push(<Square value={squares[i + rowOffset]} onSquareClick={() => handleClick(i + rowOffset)} />);
+    }
+    console.log(content)
+    return content;
+    
+  })
 
   let status;
   const winner = calculateWinner(squares);
@@ -84,19 +93,13 @@ export function Board({ xIsNext, squares, onPlay }) {
     <>
       <div className="status">{status}</div>
       <div className="board-row">
-        <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
-        <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
-        <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
+        {element(0)}
       </div>
       <div className="board-row">
-        <Square value={squares[3]} onSquareClick={() => handleClick(3)} />
-        <Square value={squares[4]} onSquareClick={() => handleClick(4)} />
-        <Square value={squares[5]} onSquareClick={() => handleClick(5)} />
+      {element(3)}
       </div>
       <div className="board-row">
-        <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
-        <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
-        <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
+      {element(6)}
       </div>
     </>
   );
