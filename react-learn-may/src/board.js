@@ -76,10 +76,16 @@ export function Board({ xIsNext, squares, onPlay }) {
     for (let i = 0; i < 3; i++) {
       content.push(<Square value={squares[i + rowOffset]} onSquareClick={() => handleClick(i + rowOffset)} />);
     }
-    console.log(content)
     return content;
-    
-  })
+  });
+
+  const lattice = () => {
+    let content = [];
+    for (let i = 0; i < 7; i += 3) {
+      content.push(<div className="board-row"> {element(i)}</div>)
+    }
+    return content;
+  }
 
   let status;
   const winner = calculateWinner(squares);
@@ -92,15 +98,7 @@ export function Board({ xIsNext, squares, onPlay }) {
   return (
     <>
       <div className="status">{status}</div>
-      <div className="board-row">
-        {element(0)}
-      </div>
-      <div className="board-row">
-      {element(3)}
-      </div>
-      <div className="board-row">
-      {element(6)}
-      </div>
+      {lattice()}
     </>
   );
 
