@@ -87,4 +87,10 @@
   
   .game-info {
     margin-left: 20px;
+    margin-top: 10px;
+  }
+
+  .game-sort {
+    margin-left: 20px;
+    margin-top: 25px;
   }

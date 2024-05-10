@@ -1,5 +1,4 @@
 import { useState } from 'react';
-
 function Square({ value, onSquareClick }) {
   return <button
     className="square"
@@ -12,7 +11,8 @@ export default function Game() {
   const [currentMove, setCurrentMove] = useState(0);
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove];
-
+  const [sortDir, setSortDir] = useState(false);
+  let currentMoveSet = null;
   function handlePlay(nextSquares) {
     const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
     setHistory(nextHistory);
@@ -23,8 +23,13 @@ export default function Game() {
     setCurrentMove(nextMove);
   }
 
+  function toggleSort() {
+    setSortDir(!sortDir);
+  }
+
   const moves = history.map((squares, move) => {
     let description;
+
     if (move > 0) {
       description = 'Go to move #' + move;
     } else {
@@ -46,14 +51,23 @@ export default function Game() {
     }
 
   });
-  console.log(moves)
+
+
+  if (sortDir) {
+    currentMoveSet = moves;
+  } else  {
+    currentMoveSet = moves.reverse();
+  }
   return (
     <div className="game">
       <div className="game-board">
         <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
       <div className="game-info">
-        <ol>{moves}</ol>
+        <ol>{currentMoveSet}</ol>
+      </div>
+      <div className="game-sort">
+        <button onClick={() => toggleSort()}>Sort</button>
       </div>
     </div>
   );
@@ -74,7 +88,7 @@ export function Board({ xIsNext, squares, onPlay }) {
   const element = ((rowOffset) => {
     let content = [];
     for (let i = 0; i < 3; i++) {
-      content.push(<Square value={squares[i + rowOffset]} onSquareClick={() => handleClick(i + rowOffset)} />);
+      content.push(<Square key={i+rowOffset} value={squares[i + rowOffset]} onSquareClick={() => handleClick(i + rowOffset)} />);
     }
     return content;
   });
@@ -82,7 +96,7 @@ export function Board({ xIsNext, squares, onPlay }) {
   const lattice = () => {
     let content = [];
     for (let i = 0; i < 7; i += 3) {
-      content.push(<div className="board-row"> {element(i)}</div>)
+      content.push(<div key={i} className="board-row"> {element(i)}</div>)
     }
     return content;
   }
