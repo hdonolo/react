@@ -1,10 +1,9 @@
 import { useState } from 'react';
-function Square({ value, onSquareClick, mykey }) {
+function Square({ value, onSquareClick, mykey, lineArr}) {
   let myClass = '';
-  if (mykey === 3) {
-    myClass = "win-bkg " 
+  if (lineArr && lineArr.indexOf(mykey) !== -1) {
+    myClass = "win-bkg ";
   }
-
   return <button
     className={`square  ${myClass}`}
     onClick={onSquareClick}
@@ -79,7 +78,7 @@ export default function Game() {
 }
 export function Board({ xIsNext, squares, onPlay }) {
   function handleClick(i) {
-    if (squares[i] || calculateWinner(squares)) {
+    if (squares[i] || calculateWinner(squares).winner) {
       return;
     }
     const nextSquares = squares.slice();
@@ -90,10 +89,11 @@ export function Board({ xIsNext, squares, onPlay }) {
     }
     onPlay(nextSquares);
   }
+  let lineArr = calculateWinner(squares).linesWin;
   const element = ((rowOffset) => {
     let content = [];
     for (let i = 0; i < 3; i++) {
-      content.push(<Square mykey={i+rowOffset}  key={i+rowOffset} value={squares[i + rowOffset]} onSquareClick={() => handleClick(i + rowOffset)} />);
+      content.push(<Square lineArr={lineArr} mykey={i+rowOffset}  key={i+rowOffset} value={squares[i + rowOffset]} onSquareClick={() => handleClick(i + rowOffset)} />);
     }
     return content;
   });
@@ -107,7 +107,7 @@ export function Board({ xIsNext, squares, onPlay }) {
   }
 
   let status;
-  const winner = calculateWinner(squares);
+  const winner = calculateWinner(squares).winner;
   if (winner) {
     status = 'Winner: ' + winner;
   } else {
@@ -124,6 +124,8 @@ export function Board({ xIsNext, squares, onPlay }) {
 }
 
 function calculateWinner(squares) {
+  let winObj = { winner: '', linesWin: null };
+  let notNullCount = 0;
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -134,11 +136,25 @@ function calculateWinner(squares) {
     [0, 4, 8],
     [2, 4, 6]
   ];
-  for (let i = 0; i < lines.length; i++) {
-    const [a, b, c] = lines[i];
-    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
+  console.log(1111, squares)
+  for (let i = 0; i < squares.length; i++) {
+    if (typeof squares[i] === 'string') {
+      notNullCount++;
     }
   }
-  return null;
+  console.log(222, notNullCount);
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      console.log(333, lines[i]);
+      winObj.linesWin = lines[i];
+      winObj.winner = squares[a];
+      return winObj;
+    }
+  }
+  if (notNullCount === 9) {
+    winObj.winner = 'tie'; 
+  } 
+  return winObj;
 }
