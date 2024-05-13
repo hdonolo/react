@@ -1,7 +1,12 @@
 import { useState } from 'react';
-function Square({ value, onSquareClick }) {
+function Square({ value, onSquareClick, mykey }) {
+  let myClass = '';
+  if (mykey === 3) {
+    myClass = "win-bkg " 
+  }
+
   return <button
-    className="square"
+    className={`square  ${myClass}`}
     onClick={onSquareClick}
   >{value}</button>;
 }
@@ -88,7 +93,7 @@ export function Board({ xIsNext, squares, onPlay }) {
   const element = ((rowOffset) => {
     let content = [];
     for (let i = 0; i < 3; i++) {
-      content.push(<Square key={i+rowOffset} value={squares[i + rowOffset]} onSquareClick={() => handleClick(i + rowOffset)} />);
+      content.push(<Square mykey={i+rowOffset}  key={i+rowOffset} value={squares[i + rowOffset]} onSquareClick={() => handleClick(i + rowOffset)} />);
     }
     return content;
   });
