@@ -81,6 +81,11 @@ export function Board({ xIsNext, squares, onPlay }) {
     if (squares[i] || calculateWinner(squares).winner) {
       return;
     }
+    let row = Math.ceil((i+1)/3)
+    let col = (i+1)%3
+    col = (col === 0) ? 3 : col;
+    console.log('index', i, 'row: ', row, 'col: ', col)
+
     const nextSquares = squares.slice();
     if (xIsNext) {
       nextSquares[i] = "X";
@@ -136,18 +141,15 @@ function calculateWinner(squares) {
     [0, 4, 8],
     [2, 4, 6]
   ];
-  console.log(1111, squares)
   for (let i = 0; i < squares.length; i++) {
     if (typeof squares[i] === 'string') {
       notNullCount++;
     }
   }
-  console.log(222, notNullCount);
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
 
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      console.log(333, lines[i]);
       winObj.linesWin = lines[i];
       winObj.winner = squares[a];
       return winObj;
