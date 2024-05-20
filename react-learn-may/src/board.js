@@ -1,4 +1,6 @@
 import { useState } from 'react';
+let currentPos = { row: -1, col: -1 };
+
 function Square({ value, onSquareClick, mykey, lineArr}) {
   let myClass = '';
   if (lineArr && lineArr.indexOf(mykey) !== -1) {
@@ -40,7 +42,7 @@ export default function Game() {
       description = 'Go to game start';
     }
     if (move === currentMove && currentMove !== 0) {
-      description = 'You are in move #' + move;
+      description = 'You are in move #' + move + 'Column: ' + currentPos.col + ', Row: ' + currentPos.row;
       return (
         <li key={move}>
           <span>{description}</span>
@@ -81,12 +83,12 @@ export function Board({ xIsNext, squares, onPlay }) {
     if (squares[i] || calculateWinner(squares).winner) {
       return;
     }
-    let row = Math.ceil((i+1)/3)
-    let col = (i+1)%3
-    col = (col === 0) ? 3 : col;
-    console.log('index', i, 'row: ', row, 'col: ', col)
-
+    currentPos.col = (i+1)%3
+    currentPos.col = (currentPos.col === 0) ? 3 : currentPos.col;
+    currentPos.row = Math.ceil((i+1)/3);
+     console.log('index', i, 'row: ', currentPos.row, 'col: ', currentPos.col)
     const nextSquares = squares.slice();
+
     if (xIsNext) {
       nextSquares[i] = "X";
     } else {
