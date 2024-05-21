@@ -41,8 +41,20 @@ export default function Game() {
     } else {
       description = 'Go to game start';
     }
+
+    
     if (move === currentMove && currentMove !== 0) {
-      description = 'You are in move #' + move + 'Column: ' + currentPos.col + ', Row: ' + currentPos.row;
+      let histLen = history.length;
+      if (histLen > 2) {
+        console.log(!history[move-1][0],history[move][0])
+        for (let j=0; j<9; j++) {
+          if (!history[move-1][j] && typeof history[move][j] === 'string') {
+            console.log(99999, history[move][j])
+          }
+        }
+      }
+      // description = 'You are in move #' + move + 'Column: ' + currentPos.col + ', Row: ' + currentPos.row;
+      description = 'You are in move #' + move + 'Column: '+ squares[move-1];
       return (
         <li key={move}>
           <span>{description}</span>
@@ -90,9 +102,9 @@ export function Board({ xIsNext, squares, onPlay }) {
     const nextSquares = squares.slice();
 
     if (xIsNext) {
-      nextSquares[i] = "X";
+      nextSquares[i] = 'X' + currentPos.row + currentPos.col;
     } else {
-      nextSquares[i] = "O";
+      nextSquares[i] = 'O' + currentPos.row + currentPos.col;
     }
     onPlay(nextSquares);
   }
